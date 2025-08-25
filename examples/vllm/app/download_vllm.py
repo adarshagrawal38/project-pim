@@ -44,7 +44,7 @@ def http_server(config, source):
 
 
 def download_file_from_url(url, file_path):
-    logger.info(f"Downloading file from the '{url}' url")
+    logger.info(f"Downloading file from the url '{url}'")
 
     try:
         response = requests.get(url, stream=True)
@@ -52,7 +52,7 @@ def download_file_from_url(url, file_path):
         with open(file_path, 'wb') as f:
             for chunk in response.iter_content(chunk_size=8192):
                 f.write(chunk)
-        logger.info(f"file downloaded successfully to '{file_path}'")
+        logger.info(f"File downloaded successfully to '{file_path}'")
     except requests.exceptions.RequestException as e:
         logger.error(f"error during download: {e}")
 
@@ -88,11 +88,13 @@ def readConfig(config_file_path):
 
 def download_manager(config):
     logger.info("Starting model download process.")
+    supported_source = ["http_server"]
+
     source = config["mode"]["source"]
     if source == "http-server":
         http_server(config, source)
     else:
-        logger.error(f"failed to download model as '{source}' source not supported")
+        logger.error(f"failed to download model as '{source}' source not supported, these are the supported {supported_source} source")
         raise Exception(f"failed to download model as '{source}' source not supported")
     
     logger.info("Model download process completed.")
